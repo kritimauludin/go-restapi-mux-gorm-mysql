@@ -1,9 +1,25 @@
 package productcontroller
 
-import "net/http"
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	"github.com/kritimauludin/go-restapi-mux-gorm-mysql/models"
+)
 
 func Index(w http.ResponseWriter, r *http.Request)  {
-	
+	var products []models.Product
+
+	if err :=  models.DB.Find(&products).Error; err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	response, _ := json.Marshal(products)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
 }
 func Show(w http.ResponseWriter, r *http.Request)  {
 	
